@@ -1,6 +1,31 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
+<script>
+(function(){
+  var k='zhxisbeauty';
+  if(sessionStorage.getItem('ka_auth')!==k){
+    var el=document.createElement('div');
+    el.style.cssText='position:fixed;inset:0;background:#1F3864;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif';
+    el.innerHTML='<div style="background:#fff;border-radius:12px;padding:36px 40px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.3);min-width:280px">'
+      +'<div style="font-size:20px;font-weight:800;color:#1F3864;margin-bottom:6px">景酒集团 KA 业绩看板</div>'
+      +'<div style="font-size:12px;color:#888;margin-bottom:20px">请输入访问密码</div>'
+      +'<input id="_pwd" type="password" placeholder="密码" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;outline:none;box-sizing:border-box">'
+      +'<button id="_btn" style="width:100%;margin-top:12px;padding:10px;background:#1F3864;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">进入</button>'
+      +'<div id="_err" style="color:#E74C3C;font-size:12px;margin-top:8px;height:16px"></div>'
+      +'</div>';
+    document.documentElement.appendChild(el);
+    function check(){
+      if(document.getElementById('_pwd').value===k){
+        sessionStorage.setItem('ka_auth',k);el.remove();
+      }else{document.getElementById('_err').textContent='密码错误，请重试';}
+    }
+    document.getElementById('_btn').onclick=check;
+    document.getElementById('_pwd').onkeydown=function(e){if(e.key==='Enter')check();};
+    document.addEventListener('DOMContentLoaded',function(){document.getElementById('_pwd').focus();});
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>景酒集团 KA Performance Tracking</title>
@@ -78,11 +103,11 @@ tr:hover td{background:#f8fafc}
   <div style="max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
     <div>
       <h1>🏰 景酒集团 KA Performance Tracking</h1>
-      <div style="font-size:11px;opacity:.75;margin-top:4px">香港迪士尼乐园 &nbsp;·&nbsp; 上海迪士尼度假区 &nbsp;·&nbsp; 长隆集团 &nbsp;·&nbsp; 北京环球度假区 &nbsp;·&nbsp; 日本环球影城 &nbsp;|&nbsp; 报告日期：2026-07-27 &nbsp;|&nbsp; Data: Trip.com BigQuery</div>
+      <div style="font-size:11px;opacity:.75;margin-top:4px">香港迪士尼乐园 &nbsp;·&nbsp; 上海迪士尼度假区 &nbsp;·&nbsp; 长隆集团 &nbsp;·&nbsp; 北京环球度假区 &nbsp;·&nbsp; 日本环球影城 &nbsp;|&nbsp; 报告日期：2026-08-11 &nbsp;|&nbsp; Data: Trip.com BigQuery</div>
     </div>
     <div style="text-align:right;font-size:11px;opacity:.7">
       <div>Full Year: 2022–2025</div>
-      <div>YTD: Jan–Jul 2026</div>
+      <div>YTD: Jan–Aug 2026</div>
     </div>
   </div>
 </div>
@@ -93,7 +118,7 @@ tr:hover td{background:#f8fafc}
     <b>数据口径说明：</b>
     门票（ANT）— 表 <code>edw_ord_tnt_order</code>，筛选条件：<code>orderbrand='trip'</code>，<b>不限 orderstatus</b>（含所有状态）；指标：GMV = financial_amount，QTY = financial_quantity。
     &nbsp;|&nbsp; 酒店（HTL）— 表 <code>edw_ord_htl_order</code>，筛选条件：<code>orderbrand='trip'</code>，<b>不限 orderstatus</b>（含所有状态）；指标：GMV = amount，Room Nights = ord_days。
-    &nbsp;|&nbsp; YTD 为 Jan 1 – Jul 27 与上年同期对比。
+    &nbsp;|&nbsp; YTD 为 Jan 1 – Aug 11 与上年同期对比。
   </div>
   <div class="table-wrap">
     <table>
@@ -120,8 +145,8 @@ tr:hover td{background:#f8fafc}
               <td>JP 大阪</td>
               <td>¥263.9M</td>
               <td class="up">+53%</td>
-              <td>¥125.04M</td>
-              <td class="dn">-26%</td>
+              <td>¥134.18M</td>
+              <td class="dn">-23%</td>
               <td><div style="font-size:10px;width:100%">
   <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
     <span style="color:#334155;font-weight:600;min-width:28px">100%</span>
@@ -146,7 +171,7 @@ tr:hover td{background:#f8fafc}
     <span style="color:#64748b;min-width:28px;text-align:right">—</span>
   </div>
   <div style="display:flex;justify-content:space-between;color:#64748b">
-    <span>🎡 385,874</span>
+    <span>🎡 385,871</span>
     <span>🏨 —</span>
   </div>
 </div></td>
@@ -157,8 +182,8 @@ tr:hover td{background:#f8fafc}
               <td>CN 上海</td>
               <td>¥226.08M</td>
               <td class="up">+239%</td>
-              <td>¥227.03M</td>
-              <td class="up">+110%</td>
+              <td>¥248.94M</td>
+              <td class="up">+114%</td>
               <td><div style="font-size:10px;width:100%">
   <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
     <span style="color:#334155;font-weight:600;min-width:28px">76%</span>
@@ -194,7 +219,7 @@ tr:hover td{background:#f8fafc}
               <td>HK 香港</td>
               <td>¥218.99M</td>
               <td class="up">+41%</td>
-              <td>¥115.95M</td>
+              <td>¥125.22M</td>
               <td class="dn">-1%</td>
               <td><div style="font-size:10px;width:100%">
   <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
@@ -231,8 +256,8 @@ tr:hover td{background:#f8fafc}
               <td>CN 广东</td>
               <td>¥135.61M</td>
               <td class="up">+89%</td>
-              <td>¥90.97M</td>
-              <td class="up">+23%</td>
+              <td>¥99.28M</td>
+              <td class="up">+24%</td>
               <td><div style="font-size:10px;width:100%">
   <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
     <span style="color:#334155;font-weight:600;min-width:28px">20%</span>
@@ -257,7 +282,7 @@ tr:hover td{background:#f8fafc}
     <span style="color:#64748b;min-width:28px;text-align:right">47%</span>
   </div>
   <div style="display:flex;justify-content:space-between;color:#64748b">
-    <span>🎡 60,111</span>
+    <span>🎡 60,110</span>
     <span>🏨 51,211<span style="font-size:9px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 4px;margin-left:3px;font-weight:700">RN主导</span></span>
   </div>
 </div></td>
@@ -268,8 +293,8 @@ tr:hover td{background:#f8fafc}
               <td>CN 北京</td>
               <td>¥65.67M</td>
               <td class="up">+180%</td>
-              <td>¥88.13M</td>
-              <td class="up">+207%</td>
+              <td>¥96.86M</td>
+              <td class="up">+210%</td>
               <td><div style="font-size:10px;width:100%">
   <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
     <span style="color:#334155;font-weight:600;min-width:28px">78%</span>
@@ -325,9 +350,9 @@ tr:hover td{background:#f8fafc}
       </div>
       <div class="kpi-sep"></div>
       <div class="kpi-item">
-        <div class="kpi-val">¥125.04M</div>
-        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥125.04M / HTL —</span></div>
-        <div class="kpi-yoy" style="color:#dc2626">-26% YoY</div>
+        <div class="kpi-val">¥134.18M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥134.18M / HTL —</span></div>
+        <div class="kpi-yoy" style="color:#dc2626">-23% YoY</div>
       </div>
       <div class="kpi-sep"></div>
       <div class="kpi-item" style="flex:1.4">
@@ -341,7 +366,7 @@ tr:hover td{background:#f8fafc}
         <div class="detail-row">
           <span class="detail-label">🎡 门票 GMV 2025</span>
           <span class="detail-val">¥263.9M <span class="detail-share">(100% of total)</span></span>
-          <span class="detail-extra">QTY: 385,874</span>
+          <span class="detail-extra">QTY: 385,871</span>
         </div></div>
 
     <div class="divider"></div>
@@ -379,9 +404,9 @@ tr:hover td{background:#f8fafc}
       </div>
       <div class="kpi-sep"></div>
       <div class="kpi-item">
-        <div class="kpi-val">¥227.03M</div>
-        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥174.0M / HTL ¥53.03M</span></div>
-        <div class="kpi-yoy" style="color:#16a34a">+110% YoY</div>
+        <div class="kpi-val">¥248.94M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥190.99M / HTL ¥57.95M</span></div>
+        <div class="kpi-yoy" style="color:#16a34a">+114% YoY</div>
       </div>
       <div class="kpi-sep"></div>
       <div class="kpi-item" style="flex:1.4">
@@ -442,8 +467,8 @@ tr:hover td{background:#f8fafc}
       </div>
       <div class="kpi-sep"></div>
       <div class="kpi-item">
-        <div class="kpi-val">¥115.95M</div>
-        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥93.31M / HTL ¥22.64M</span></div>
+        <div class="kpi-val">¥125.22M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥100.72M / HTL ¥24.5M</span></div>
         <div class="kpi-yoy" style="color:#dc2626">-1% YoY</div>
       </div>
       <div class="kpi-sep"></div>
@@ -505,9 +530,9 @@ tr:hover td{background:#f8fafc}
       </div>
       <div class="kpi-sep"></div>
       <div class="kpi-item">
-        <div class="kpi-val">¥90.97M</div>
-        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥23.27M / HTL ¥67.7M</span></div>
-        <div class="kpi-yoy" style="color:#16a34a">+23% YoY</div>
+        <div class="kpi-val">¥99.28M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥25.89M / HTL ¥73.39M</span></div>
+        <div class="kpi-yoy" style="color:#16a34a">+24% YoY</div>
       </div>
       <div class="kpi-sep"></div>
       <div class="kpi-item" style="flex:1.4">
@@ -521,7 +546,7 @@ tr:hover td{background:#f8fafc}
         <div class="detail-row">
           <span class="detail-label">🎡 门票 GMV 2025</span>
           <span class="detail-val">¥27.31M <span class="detail-share">(20% of total)</span></span>
-          <span class="detail-extra">QTY: 60,111</span>
+          <span class="detail-extra">QTY: 60,110</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">🏨 酒店 GMV 2025</span>
@@ -568,9 +593,9 @@ tr:hover td{background:#f8fafc}
       </div>
       <div class="kpi-sep"></div>
       <div class="kpi-item">
-        <div class="kpi-val">¥88.13M</div>
-        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥76.33M / HTL ¥11.8M</span></div>
-        <div class="kpi-yoy" style="color:#16a34a">+207% YoY</div>
+        <div class="kpi-val">¥96.86M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥83.95M / HTL ¥12.91M</span></div>
+        <div class="kpi-yoy" style="color:#16a34a">+210% YoY</div>
       </div>
       <div class="kpi-sep"></div>
       <div class="kpi-item" style="flex:1.4">
@@ -624,7 +649,7 @@ tr:hover td{background:#f8fafc}
     </div>
     <span class="badge badge-potential" style="font-size:9px;white-space:nowrap">Pot. Strategic</span>
   </div>
-  <div class="strat-signals"><span class="strat-signal signal-dn">YTD -26% YoY</span><span class="strat-signal signal-neu">#1 HK 25%</span><span class="strat-signal signal-neu">#2 KR 25%</span></div>
+  <div class="strat-signals"><span class="strat-signal signal-dn">YTD -23% YoY</span><span class="strat-signal signal-neu">#1 HK 25%</span><span class="strat-signal signal-neu">#2 KR 25%</span></div>
   <div class="strat-body"><div class="strat-item">
           <div class="strat-num">1</div>
           <div class="strat-text"><b>📉 YTD 下滑止血优先</b> — YTD -31%，需排查价格竞争/汇率/替代目的地等因素，Q3 前制定针对性恢复方案。</div>
@@ -646,7 +671,7 @@ tr:hover td{background:#f8fafc}
     </div>
     <span class="badge badge-potential" style="font-size:9px;white-space:nowrap">Pot. Strategic</span>
   </div>
-  <div class="strat-signals"><span class="strat-signal signal-up">YTD +110% YoY</span><span class="strat-signal signal-neu">HTL 23% GMV</span><span class="strat-signal signal-neu">#1 KR 20%</span><span class="strat-signal signal-neu">#2 XX 11%</span></div>
+  <div class="strat-signals"><span class="strat-signal signal-up">YTD +114% YoY</span><span class="strat-signal signal-neu">HTL 23% GMV</span><span class="strat-signal signal-neu">#1 KR 20%</span><span class="strat-signal signal-neu">#2 XX 11%</span></div>
   <div class="strat-body"><div class="strat-item">
           <div class="strat-num">1</div>
           <div class="strat-text"><b>🚀 复制 SBD×Mega 高增长打法</b> — 2025 +239%、YTD +95% 的核心驱动是 SBD+Mega 联动，持续深化该机制，确保每季度至少一次联合活动。</div>
@@ -690,7 +715,7 @@ tr:hover td{background:#f8fafc}
     </div>
     <span class="badge badge-potential" style="font-size:9px;white-space:nowrap">Pot. Strategic</span>
   </div>
-  <div class="strat-signals"><span class="strat-signal signal-up">YTD +23% YoY</span><span class="strat-signal signal-neu">HTL 79% GMV</span><span class="strat-signal signal-neu">#1 HK 63%</span><span class="strat-signal signal-neu">#2 SG 6%</span></div>
+  <div class="strat-signals"><span class="strat-signal signal-up">YTD +24% YoY</span><span class="strat-signal signal-neu">HTL 79% GMV</span><span class="strat-signal signal-neu">#1 HK 63%</span><span class="strat-signal signal-neu">#2 SG 6%</span></div>
   <div class="strat-body"><div class="strat-item">
           <div class="strat-num">1</div>
           <div class="strat-text"><b>🏨 酒店×门票联动提渗透</b> — 酒店主导（80% GMV），重点打通住宿+门票连带，推「住长隆送门票」组合，提升 ANT 渗透率。</div>
@@ -712,7 +737,7 @@ tr:hover td{background:#f8fafc}
     </div>
     <span class="badge badge-potential" style="font-size:9px;white-space:nowrap">Pot. Strategic</span>
   </div>
-  <div class="strat-signals"><span class="strat-signal signal-up">YTD +207% YoY</span><span class="strat-signal signal-neu">HTL 21% GMV</span><span class="strat-signal signal-neu">#1 XX 22%</span><span class="strat-signal signal-neu">#2 RU 15%</span></div>
+  <div class="strat-signals"><span class="strat-signal signal-up">YTD +210% YoY</span><span class="strat-signal signal-neu">HTL 21% GMV</span><span class="strat-signal signal-neu">#1 XX 22%</span><span class="strat-signal signal-neu">#2 RU 15%</span></div>
   <div class="strat-body"><div class="strat-item">
           <div class="strat-num">1</div>
           <div class="strat-text"><b>🚀 乘势爬坡扩渗透</b> — YTD +197% 处于高速成长期，重点扩大 Trip 渗透率，争取更多站内流量位资源。</div>
@@ -729,7 +754,7 @@ tr:hover td{background:#f8fafc}
 </div></div>
 </div>
 
-<div class="footer">景酒集团 KA Tracking · Generated 2026-07-27 18:29 · trip-ibu-adhoc BQ · 含所有 orderstatus</div>
+<div class="footer">景酒集团 KA Tracking · Generated 2026-08-11 16:13 · trip-ibu-adhoc BQ · 含所有 orderstatus</div>
 
 <script>
 Chart.defaults.font.family = '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
@@ -742,10 +767,10 @@ new Chart(document.getElementById('ann_usj'), {
   data: {
     labels: ["2022", "2023", "2024", "2025", "2026*"],
     datasets: [
-      { label: 'ANT', data: [3.05, 46.74, 172.24, 263.9, 125.04], backgroundColor: 'rgba(8,145,178,0.85)',
+      { label: 'ANT', data: [3.05, 46.74, 172.24, 263.9, 134.18], backgroundColor: 'rgba(8,145,178,0.85)',
          datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [3.05, 46.74, 172.24, 263.9, 125.04][ctx.dataIndex];
+             const tnt = [3.05, 46.74, 172.24, 263.9, 134.18][ctx.dataIndex];
              const htl = [0, 0, 0, 0, 0][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || tnt===0) return '';
@@ -756,7 +781,7 @@ new Chart(document.getElementById('ann_usj'), {
       { label: 'HTL', data: [0, 0, 0, 0, 0], backgroundColor: 'rgba(8,145,178,0.35)',
          datalabels: { anchor:'center', align:'center', color:'#0891b2', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [3.05, 46.74, 172.24, 263.9, 125.04][ctx.dataIndex];
+             const tnt = [3.05, 46.74, 172.24, 263.9, 134.18][ctx.dataIndex];
              const htl = [0, 0, 0, 0, 0][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || htl===0) return '';
@@ -784,14 +809,14 @@ new Chart(document.getElementById('mon_tnt_usj'), {
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-      { label: '2025 ANT', data: [22.33, 26.87, 33.37, 25.85, 25.46, 16.76, 16.25, 16.47, 17.66, 17.69, 19.22, 23.07], borderColor:'#94a3b8',
+      { label: '2025 ANT', data: [22.33, 26.87, 33.37, 25.85, 25.46, 16.76, 19.14, 4.33, 17.66, 17.69, 19.22, 23.07], borderColor:'#94a3b8',
          backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
          yAxisID:'y', datalabels:{display:false} },
-      { label: '2026 ANT', data: [20.78, 18.31, 19.4, 16.32, 17.33, 16.87, 16.04, null, null, null, null, null], borderColor:'#0891b2',
+      { label: '2026 ANT', data: [20.78, 18.31, 19.4, 16.31, 17.33, 16.83, 18.93, 6.29, null, null, null, null], borderColor:'#0891b2',
          backgroundColor:'rgba(8,145,178,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
          yAxisID:'y', datalabels:{display:false},
-         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
-      { label: 'YoY%', data: [-6.9, -31.9, -41.9, -36.9, -31.9, 0.7, -1.3, null, null, null, null, null], borderColor:'#f59e0b',
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 7 ? [4,3] : [] } },
+      { label: 'YoY%', data: [-6.9, -31.9, -41.9, -36.9, -31.9, 0.4, -1.1, 45.3, null, null, null, null], borderColor:'#f59e0b',
          backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
          borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
     ]
@@ -820,22 +845,22 @@ new Chart(document.getElementById('ann_shdl'), {
   data: {
     labels: ["2022", "2023", "2024", "2025", "2026*"],
     datasets: [
-      { label: 'ANT', data: [0.16, 6.71, 46.19, 172.3, 174.0], backgroundColor: 'rgba(37,99,235,0.85)',
+      { label: 'ANT', data: [0.16, 6.71, 46.19, 172.3, 190.99], backgroundColor: 'rgba(37,99,235,0.85)',
          datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [0.16, 6.71, 46.19, 172.3, 174.0][ctx.dataIndex];
-             const htl = [0.84, 10.9, 20.41, 53.78, 53.03][ctx.dataIndex];
+             const tnt = [0.16, 6.71, 46.19, 172.3, 190.99][ctx.dataIndex];
+             const htl = [0.84, 10.9, 20.41, 53.78, 57.95][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || tnt===0) return '';
              return Math.round(tnt/tot*100)+'%';
            }
          }
       },
-      { label: 'HTL', data: [0.84, 10.9, 20.41, 53.78, 53.03], backgroundColor: 'rgba(37,99,235,0.35)',
+      { label: 'HTL', data: [0.84, 10.9, 20.41, 53.78, 57.95], backgroundColor: 'rgba(37,99,235,0.35)',
          datalabels: { anchor:'center', align:'center', color:'#2563eb', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [0.16, 6.71, 46.19, 172.3, 174.0][ctx.dataIndex];
-             const htl = [0.84, 10.9, 20.41, 53.78, 53.03][ctx.dataIndex];
+             const tnt = [0.16, 6.71, 46.19, 172.3, 190.99][ctx.dataIndex];
+             const htl = [0.84, 10.9, 20.41, 53.78, 57.95][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || htl===0) return '';
              return Math.round(htl/tot*100)+'%';
@@ -862,14 +887,14 @@ new Chart(document.getElementById('mon_tnt_shdl'), {
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-      { label: '2025 ANT', data: [7.25, 7.97, 11.94, 14.71, 12.46, 12.37, 11.05, 10.97, 10.68, 17.54, 20.53, 32.26], borderColor:'#94a3b8',
+      { label: '2025 ANT', data: [7.25, 7.97, 11.94, 14.71, 12.46, 12.37, 13.61, 3.63, 10.68, 17.54, 20.53, 32.26], borderColor:'#94a3b8',
          backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
          yAxisID:'y', datalabels:{display:false} },
-      { label: '2026 ANT', data: [18.49, 12.17, 31.78, 28.33, 27.32, 25.81, 30.1, null, null, null, null, null], borderColor:'#2563eb',
+      { label: '2026 ANT', data: [18.49, 12.17, 31.78, 28.33, 27.32, 25.77, 35.81, 11.33, null, null, null, null], borderColor:'#2563eb',
          backgroundColor:'rgba(37,99,235,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
          yAxisID:'y', datalabels:{display:false},
-         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
-      { label: 'YoY%', data: [155.0, 52.7, 166.2, 92.6, 119.3, 108.6, 172.4, null, null, null, null, null], borderColor:'#f59e0b',
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 7 ? [4,3] : [] } },
+      { label: 'YoY%', data: [155.0, 52.7, 166.2, 92.6, 119.3, 108.3, 163.1, 212.1, null, null, null, null], borderColor:'#f59e0b',
          backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
          borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
     ]
@@ -897,14 +922,14 @@ new Chart(document.getElementById('mon_htl_shdl'), {
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-      { label: '2025 HTL', data: [3.02, 3.5, 4.11, 4.42, 4.62, 4.74, 4.38, 5.07, 4.65, 4.68, 4.82, 4.76], borderColor:'#94a3b8',
+      { label: '2025 HTL', data: [3.02, 3.5, 4.11, 4.42, 4.62, 4.74, 5.39, 1.58, 4.65, 4.68, 4.82, 4.76], borderColor:'#94a3b8',
          backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
          yAxisID:'y', datalabels:{display:false} },
-      { label: '2026 HTL', data: [5.08, 4.73, 6.94, 8.83, 8.98, 9.32, 9.17, null, null, null, null, null], borderColor:'#2563eb',
+      { label: '2026 HTL', data: [5.08, 4.73, 6.94, 8.83, 8.98, 9.32, 10.69, 3.39, null, null, null, null], borderColor:'#2563eb',
          backgroundColor:'rgba(37,99,235,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
          yAxisID:'y', datalabels:{display:false},
-         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
-      { label: 'YoY%', data: [68.2, 35.1, 68.9, 99.8, 94.4, 96.6, 109.4, null, null, null, null, null], borderColor:'#f59e0b',
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 7 ? [4,3] : [] } },
+      { label: 'YoY%', data: [68.2, 35.1, 68.9, 99.8, 94.4, 96.6, 98.3, 114.6, null, null, null, null], borderColor:'#f59e0b',
          backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
          borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
     ]
@@ -933,22 +958,22 @@ new Chart(document.getElementById('ann_hkd'), {
   data: {
     labels: ["2022", "2023", "2024", "2025", "2026*"],
     datasets: [
-      { label: 'ANT', data: [14.39, 64.38, 118.7, 168.02, 93.31], backgroundColor: 'rgba(220,38,38,0.85)',
+      { label: 'ANT', data: [14.39, 64.38, 118.7, 168.02, 100.72], backgroundColor: 'rgba(220,38,38,0.85)',
          datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [14.39, 64.38, 118.7, 168.02, 93.31][ctx.dataIndex];
-             const htl = [31.86, 49.56, 36.37, 50.97, 22.64][ctx.dataIndex];
+             const tnt = [14.39, 64.38, 118.7, 168.02, 100.72][ctx.dataIndex];
+             const htl = [31.86, 49.56, 36.37, 50.97, 24.5][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || tnt===0) return '';
              return Math.round(tnt/tot*100)+'%';
            }
          }
       },
-      { label: 'HTL', data: [31.86, 49.56, 36.37, 50.97, 22.64], backgroundColor: 'rgba(220,38,38,0.35)',
+      { label: 'HTL', data: [31.86, 49.56, 36.37, 50.97, 24.5], backgroundColor: 'rgba(220,38,38,0.35)',
          datalabels: { anchor:'center', align:'center', color:'#dc2626', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [14.39, 64.38, 118.7, 168.02, 93.31][ctx.dataIndex];
-             const htl = [31.86, 49.56, 36.37, 50.97, 22.64][ctx.dataIndex];
+             const tnt = [14.39, 64.38, 118.7, 168.02, 100.72][ctx.dataIndex];
+             const htl = [31.86, 49.56, 36.37, 50.97, 24.5][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || htl===0) return '';
              return Math.round(htl/tot*100)+'%';
@@ -975,14 +1000,14 @@ new Chart(document.getElementById('mon_tnt_hkd'), {
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-      { label: '2025 ANT', data: [13.52, 12.77, 15.45, 13.8, 10.33, 10.56, 11.78, 13.13, 9.71, 12.57, 14.71, 27.18], borderColor:'#94a3b8',
+      { label: '2025 ANT', data: [13.52, 12.77, 15.45, 13.8, 10.33, 10.56, 14.29, 3.65, 9.71, 12.57, 14.71, 27.18], borderColor:'#94a3b8',
          backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
          yAxisID:'y', datalabels:{display:false} },
-      { label: '2026 ANT', data: [16.98, 11.23, 14.06, 11.14, 9.74, 20.05, 10.11, null, null, null, null, null], borderColor:'#dc2626',
+      { label: '2026 ANT', data: [16.98, 11.23, 14.06, 11.14, 9.74, 20.03, 12.34, 5.19, null, null, null, null], borderColor:'#dc2626',
          backgroundColor:'rgba(220,38,38,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
          yAxisID:'y', datalabels:{display:false},
-         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
-      { label: 'YoY%', data: [25.6, -12.1, -9.0, -19.3, -5.7, 89.9, -14.2, null, null, null, null, null], borderColor:'#f59e0b',
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 7 ? [4,3] : [] } },
+      { label: 'YoY%', data: [25.6, -12.1, -9.0, -19.3, -5.7, 89.7, -13.6, 42.2, null, null, null, null], borderColor:'#f59e0b',
          backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
          borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
     ]
@@ -1010,14 +1035,14 @@ new Chart(document.getElementById('mon_htl_hkd'), {
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-      { label: '2025 HTL', data: [3.82, 3.54, 4.92, 3.75, 3.53, 3.89, 4.47, 5.02, 4.16, 4.09, 4.82, 3.97], borderColor:'#94a3b8',
+      { label: '2025 HTL', data: [3.82, 3.54, 4.92, 3.75, 3.53, 3.89, 5.47, 1.57, 4.16, 4.09, 4.82, 3.97], borderColor:'#94a3b8',
          backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
          yAxisID:'y', datalabels:{display:false} },
-      { label: '2026 HTL', data: [3.0, 2.73, 3.61, 2.89, 3.76, 3.48, 3.17, null, null, null, null, null], borderColor:'#dc2626',
+      { label: '2026 HTL', data: [3.0, 2.73, 3.61, 2.89, 3.76, 3.48, 3.77, 1.26, null, null, null, null], borderColor:'#dc2626',
          backgroundColor:'rgba(220,38,38,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
          yAxisID:'y', datalabels:{display:false},
-         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
-      { label: 'YoY%', data: [-21.5, -22.9, -26.6, -22.9, 6.5, -10.5, -29.1, null, null, null, null, null], borderColor:'#f59e0b',
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 7 ? [4,3] : [] } },
+      { label: 'YoY%', data: [-21.5, -22.9, -26.6, -22.9, 6.5, -10.5, -31.1, -19.7, null, null, null, null], borderColor:'#f59e0b',
          backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
          borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
     ]
@@ -1046,22 +1071,22 @@ new Chart(document.getElementById('ann_chimelong'), {
   data: {
     labels: ["2022", "2023", "2024", "2025", "2026*"],
     datasets: [
-      { label: 'ANT', data: [0.02, 3.69, 11.69, 27.31, 23.27], backgroundColor: 'rgba(22,163,74,0.85)',
+      { label: 'ANT', data: [0.02, 3.69, 11.69, 27.31, 25.89], backgroundColor: 'rgba(22,163,74,0.85)',
          datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [0.02, 3.69, 11.69, 27.31, 23.27][ctx.dataIndex];
-             const htl = [0.63, 30.4, 60.19, 108.3, 67.7][ctx.dataIndex];
+             const tnt = [0.02, 3.69, 11.69, 27.31, 25.89][ctx.dataIndex];
+             const htl = [0.63, 30.4, 60.19, 108.3, 73.39][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || tnt===0) return '';
              return Math.round(tnt/tot*100)+'%';
            }
          }
       },
-      { label: 'HTL', data: [0.63, 30.4, 60.19, 108.3, 67.7], backgroundColor: 'rgba(22,163,74,0.35)',
+      { label: 'HTL', data: [0.63, 30.4, 60.19, 108.3, 73.39], backgroundColor: 'rgba(22,163,74,0.35)',
          datalabels: { anchor:'center', align:'center', color:'#16a34a', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [0.02, 3.69, 11.69, 27.31, 23.27][ctx.dataIndex];
-             const htl = [0.63, 30.4, 60.19, 108.3, 67.7][ctx.dataIndex];
+             const tnt = [0.02, 3.69, 11.69, 27.31, 25.89][ctx.dataIndex];
+             const htl = [0.63, 30.4, 60.19, 108.3, 73.39][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || htl===0) return '';
              return Math.round(htl/tot*100)+'%';
@@ -1088,14 +1113,14 @@ new Chart(document.getElementById('mon_tnt_chimelong'), {
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-      { label: '2025 ANT', data: [1.52, 0.79, 1.24, 3.51, 1.11, 1.66, 2.49, 3.35, 1.08, 1.79, 2.09, 6.06], borderColor:'#94a3b8',
+      { label: '2025 ANT', data: [1.52, 0.79, 1.24, 3.51, 1.11, 1.66, 3.11, 1.15, 1.08, 1.79, 2.09, 6.06], borderColor:'#94a3b8',
          backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
          yAxisID:'y', datalabels:{display:false} },
-      { label: '2026 ANT', data: [2.71, 2.38, 4.51, 3.6, 2.93, 3.08, 4.07, null, null, null, null, null], borderColor:'#16a34a',
+      { label: '2026 ANT', data: [2.71, 2.38, 4.51, 3.6, 2.93, 3.07, 4.92, 1.77, null, null, null, null], borderColor:'#16a34a',
          backgroundColor:'rgba(22,163,74,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
          yAxisID:'y', datalabels:{display:false},
-         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
-      { label: 'YoY%', data: [78.3, 201.3, 263.7, 2.6, 164.0, 85.5, 63.5, null, null, null, null, null], borderColor:'#f59e0b',
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 7 ? [4,3] : [] } },
+      { label: 'YoY%', data: [78.3, 201.3, 263.7, 2.6, 164.0, 84.9, 58.2, 53.9, null, null, null, null], borderColor:'#f59e0b',
          backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
          borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
     ]
@@ -1123,14 +1148,14 @@ new Chart(document.getElementById('mon_htl_chimelong'), {
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-      { label: '2025 HTL', data: [4.19, 5.85, 13.14, 12.57, 7.25, 9.82, 7.91, 7.72, 7.9, 7.51, 10.91, 11.78], borderColor:'#94a3b8',
+      { label: '2025 HTL', data: [4.19, 5.85, 13.14, 12.57, 7.25, 9.82, 9.66, 2.31, 7.9, 7.51, 10.91, 11.78], borderColor:'#94a3b8',
          backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
          yAxisID:'y', datalabels:{display:false} },
-      { label: '2026 HTL', data: [7.38, 6.63, 15.99, 8.09, 9.08, 8.98, 11.55, null, null, null, null, null], borderColor:'#16a34a',
+      { label: '2026 HTL', data: [7.38, 6.63, 15.99, 8.09, 9.08, 8.98, 13.67, 3.57, null, null, null, null], borderColor:'#16a34a',
          backgroundColor:'rgba(22,163,74,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
          yAxisID:'y', datalabels:{display:false},
-         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
-      { label: 'YoY%', data: [76.1, 13.3, 21.7, -35.6, 25.2, -8.6, 46.0, null, null, null, null, null], borderColor:'#f59e0b',
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 7 ? [4,3] : [] } },
+      { label: 'YoY%', data: [76.1, 13.3, 21.7, -35.6, 25.2, -8.6, 41.5, 54.5, null, null, null, null], borderColor:'#f59e0b',
          backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
          borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
     ]
@@ -1159,22 +1184,22 @@ new Chart(document.getElementById('ann_ubr'), {
   data: {
     labels: ["2022", "2023", "2024", "2025", "2026*"],
     datasets: [
-      { label: 'ANT', data: [0.61, 2.35, 16.62, 51.59, 76.33], backgroundColor: 'rgba(124,58,237,0.85)',
+      { label: 'ANT', data: [0.61, 2.35, 16.62, 51.59, 83.95], backgroundColor: 'rgba(124,58,237,0.85)',
          datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [0.61, 2.35, 16.62, 51.59, 76.33][ctx.dataIndex];
-             const htl = [0.61, 4.11, 6.8, 14.08, 11.8][ctx.dataIndex];
+             const tnt = [0.61, 2.35, 16.62, 51.59, 83.95][ctx.dataIndex];
+             const htl = [0.61, 4.11, 6.8, 14.08, 12.91][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || tnt===0) return '';
              return Math.round(tnt/tot*100)+'%';
            }
          }
       },
-      { label: 'HTL', data: [0.61, 4.11, 6.8, 14.08, 11.8], backgroundColor: 'rgba(124,58,237,0.35)',
+      { label: 'HTL', data: [0.61, 4.11, 6.8, 14.08, 12.91], backgroundColor: 'rgba(124,58,237,0.35)',
          datalabels: { anchor:'center', align:'center', color:'#7c3aed', font:{size:9,weight:'700'},
            formatter: (v,ctx) => {
-             const tnt = [0.61, 2.35, 16.62, 51.59, 76.33][ctx.dataIndex];
-             const htl = [0.61, 4.11, 6.8, 14.08, 11.8][ctx.dataIndex];
+             const tnt = [0.61, 2.35, 16.62, 51.59, 83.95][ctx.dataIndex];
+             const htl = [0.61, 4.11, 6.8, 14.08, 12.91][ctx.dataIndex];
              const tot = tnt + htl;
              if(tot===0 || htl===0) return '';
              return Math.round(htl/tot*100)+'%';
@@ -1201,14 +1226,14 @@ new Chart(document.getElementById('mon_tnt_ubr'), {
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-      { label: '2025 ANT', data: [1.49, 1.06, 3.13, 4.45, 3.18, 3.98, 3.55, 3.5, 4.58, 6.72, 5.83, 9.26], borderColor:'#94a3b8',
+      { label: '2025 ANT', data: [1.49, 1.06, 3.13, 4.45, 3.18, 3.98, 4.41, 1.15, 4.58, 6.72, 5.83, 9.26], borderColor:'#94a3b8',
          backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
          yAxisID:'y', datalabels:{display:false} },
-      { label: '2026 ANT', data: [5.08, 5.45, 14.58, 14.16, 12.66, 11.95, 12.45, null, null, null, null, null], borderColor:'#7c3aed',
+      { label: '2026 ANT', data: [5.08, 5.45, 14.58, 14.16, 12.66, 11.94, 14.94, 5.14, null, null, null, null], borderColor:'#7c3aed',
          backgroundColor:'rgba(124,58,237,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
          yAxisID:'y', datalabels:{display:false},
-         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
-      { label: 'YoY%', data: [240.9, 414.2, 365.8, 218.2, 298.1, 200.3, 250.7, null, null, null, null, null], borderColor:'#f59e0b',
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 7 ? [4,3] : [] } },
+      { label: 'YoY%', data: [240.9, 414.2, 365.8, 218.2, 298.1, 200.0, 238.8, 347.0, null, null, null, null], borderColor:'#f59e0b',
          backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
          borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
     ]
@@ -1236,14 +1261,14 @@ new Chart(document.getElementById('mon_htl_ubr'), {
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-      { label: '2025 HTL', data: [0.78, 0.86, 1.56, 1.27, 0.86, 1.13, 1.0, 1.21, 1.23, 1.44, 1.31, 1.2], borderColor:'#94a3b8',
+      { label: '2025 HTL', data: [0.78, 0.86, 1.56, 1.27, 0.86, 1.13, 1.21, 0.36, 1.23, 1.44, 1.31, 1.2], borderColor:'#94a3b8',
          backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
          yAxisID:'y', datalabels:{display:false} },
-      { label: '2026 HTL', data: [1.12, 1.37, 2.2, 2.05, 1.97, 1.5, 1.59, null, null, null, null, null], borderColor:'#7c3aed',
+      { label: '2026 HTL', data: [1.12, 1.37, 2.2, 2.05, 1.97, 1.5, 2.08, 0.62, null, null, null, null], borderColor:'#7c3aed',
          backgroundColor:'rgba(124,58,237,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
          yAxisID:'y', datalabels:{display:false},
-         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
-      { label: 'YoY%', data: [43.6, 59.3, 41.0, 61.4, 129.1, 32.7, 59.0, null, null, null, null, null], borderColor:'#f59e0b',
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 7 ? [4,3] : [] } },
+      { label: 'YoY%', data: [43.6, 59.3, 41.0, 61.4, 129.1, 32.7, 71.9, 72.2, null, null, null, null], borderColor:'#f59e0b',
          backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
          borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
     ]
