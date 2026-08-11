@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>景酒集团 KA Performance Tracking</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#1e293b;font-size:13px}
+.header{background:linear-gradient(135deg,#0a2463,#1e40af);color:white;padding:18px 24px}
+.header h1{font-size:20px;font-weight:800;letter-spacing:-.3px}
+.container{max-width:1400px;margin:0 auto;padding:20px}
+.section-title{font-size:13px;font-weight:700;color:#0a2463;border-left:3px solid #0a2463;padding-left:8px;margin-bottom:8px}
+.data-note{font-size:11px;color:#64748b;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:7px 12px;margin-bottom:14px;line-height:1.6}
+.data-note b{color:#334155}
+/* Summary table */
+.table-wrap{overflow-x:auto;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.1);margin-bottom:28px}
+table{width:100%;border-collapse:collapse;background:white;white-space:nowrap}
+th{background:#0a2463;color:white;padding:8px 10px;text-align:left;font-size:11px;font-weight:600;line-height:1.35}
+th.sub{background:#0f3080;font-size:10px;font-weight:400}
+td{padding:8px 10px;border-bottom:1px solid #f1f5f9;font-size:12px;vertical-align:middle;line-height:1.4}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+.badge{display:inline-block;padding:2px 7px;border-radius:9px;font-size:10px;font-weight:600}
+.badge-strategic{background:#fef3c7;color:#92400e}
+.badge-potential{background:#dbeafe;color:#1e40af}
+.up{color:#16a34a;font-weight:600}
+.dn{color:#dc2626;font-weight:600}
+.neu{color:#64748b}
+/* KA cards — single-column layout */
+.ka-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:20px}
+.ka-card{background:white;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.ka-card-header{padding:12px 16px;color:white;display:flex;justify-content:space-between;align-items:flex-start}
+.ka-card-body{padding:16px}
+/* KPI strip */
+.kpi-strip{display:flex;align-items:stretch;gap:0;margin-bottom:14px;background:#f8fafc;border-radius:8px;overflow:hidden}
+.kpi-item{flex:1;padding:10px 12px;text-align:center}
+.kpi-sep{width:1px;background:#e2e8f0;flex-shrink:0}
+.kpi-val{font-size:20px;font-weight:800;color:#0a2463}
+.kpi-label{font-size:10px;color:#64748b;margin-top:2px;line-height:1.3}
+.kpi-yoy{font-size:11px;font-weight:700;margin-top:3px}
+/* Detail rows */
+.detail-section{margin-bottom:12px}
+.detail-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:#f8fafc;margin-bottom:4px;font-size:12px}
+.detail-label{font-weight:600;color:#334155;min-width:130px}
+.detail-val{color:#0a2463;font-weight:700}
+.detail-share{font-weight:400;color:#64748b;font-size:11px}
+.detail-extra{margin-left:auto;color:#64748b;font-size:11px}
+/* Charts */
+.chart-block{margin-bottom:14px}
+.chart-wrap-tall{position:relative;height:160px}
+.chart-title{font-size:11px;color:#64748b;margin-bottom:4px;font-weight:600}
+.divider{height:1px;background:#f1f5f9;margin:12px 0}
+/* Strategy section */
+.strategy-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px;margin-bottom:28px}
+.strat-card{background:white;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.strat-header{padding:10px 14px;color:white;display:flex;justify-content:space-between;align-items:center}
+.strat-header-title{font-size:13px;font-weight:700}
+.strat-header-sub{font-size:10px;opacity:.8}
+.strat-signals{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px 0;border-bottom:1px solid #f1f5f9;margin-bottom:0}
+.strat-signal{font-size:10px;padding:3px 8px;border-radius:9px;font-weight:600;white-space:nowrap}
+.signal-up{background:#dcfce7;color:#15803d}
+.signal-dn{background:#fee2e2;color:#b91c1c}
+.signal-neu{background:#f1f5f9;color:#475569}
+.strat-body{padding:12px 14px}
+.strat-item{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.strat-item:last-child{margin-bottom:0}
+.strat-num{background:#f1f5f9;color:#64748b;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.strat-text{font-size:12px;color:#1e293b;line-height:1.5}
+.strat-text b{color:#0a2463;font-weight:600}
+.footer{text-align:center;padding:16px;color:#94a3b8;font-size:11px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <div>
+      <h1>🏰 景酒集团 KA Performance Tracking</h1>
+      <div style="font-size:11px;opacity:.75;margin-top:4px">香港迪士尼乐园 &nbsp;·&nbsp; 上海迪士尼度假区 &nbsp;·&nbsp; 长隆集团 &nbsp;·&nbsp; 北京环球度假区 &nbsp;·&nbsp; 日本环球影城 &nbsp;|&nbsp; 报告日期：2026-07-27 &nbsp;|&nbsp; Data: Trip.com BigQuery</div>
+    </div>
+    <div style="text-align:right;font-size:11px;opacity:.7">
+      <div>Full Year: 2022–2025</div>
+      <div>YTD: Jan–Jul 2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="section-title">KA Performance Scoreboard</div>
+  <div class="data-note">
+    <b>数据口径说明：</b>
+    门票（ANT）— 表 <code>edw_ord_tnt_order</code>，筛选条件：<code>orderbrand='trip'</code>，<b>不限 orderstatus</b>（含所有状态）；指标：GMV = financial_amount，QTY = financial_quantity。
+    &nbsp;|&nbsp; 酒店（HTL）— 表 <code>edw_ord_htl_order</code>，筛选条件：<code>orderbrand='trip'</code>，<b>不限 orderstatus</b>（含所有状态）；指标：GMV = amount，Room Nights = ord_days。
+    &nbsp;|&nbsp; YTD 为 Jan 1 – Jul 27 与上年同期对比。
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">KA</th>
+          <th rowspan="2">Tier</th>
+          <th rowspan="2">Region</th>
+          <th rowspan="2">2025<br>全年 GMV</th>
+          <th rowspan="2">YoY<br>(2024→2025)</th>
+          <th rowspan="2">2026 YTD GMV</th>
+          <th rowspan="2">YTD YoY</th>
+          <th style="text-align:center;border-bottom:1px solid rgba(255,255,255,.2);width:220px">2025 GMV 拆分</th>
+          <th style="text-align:center;border-bottom:1px solid rgba(255,255,255,.2);width:220px">2025 量级拆分</th>
+        </tr>
+        <tr>
+          <th class="sub">🎡 ANT vs 🏨 HTL（占比 bar + 绝对值）</th>
+          <th class="sub">🎡 门票 QTY vs 🏨 Room Nights（占比 bar + 绝对值）</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+              <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#0891b2;margin-right:4px"></span><b>日本环球影城</b><br><span style="color:#64748b;font-size:11px">Universal Studios Japan</span></td>
+              <td><span class="badge badge-potential">Pot. Strategic</span></td>
+              <td>JP 大阪</td>
+              <td>¥263.9M</td>
+              <td class="up">+53%</td>
+              <td>¥125.04M</td>
+              <td class="dn">-26%</td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">100%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:100%;background:#0891b2;height:100%"></div>
+      <div style="width:0%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">—</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 ¥263.9M</span>
+    <span>🏨 —</span>
+  </div>
+</div></td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">100%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:100%;background:#0891b2;height:100%"></div>
+      <div style="width:0%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">—</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 385,874</span>
+    <span>🏨 —</span>
+  </div>
+</div></td>
+            </tr>
+<tr>
+              <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2563eb;margin-right:4px"></span><b>上海迪士尼度假区</b><br><span style="color:#64748b;font-size:11px">Shanghai Disney Resort</span></td>
+              <td><span class="badge badge-potential">Pot. Strategic</span></td>
+              <td>CN 上海</td>
+              <td>¥226.08M</td>
+              <td class="up">+239%</td>
+              <td>¥227.03M</td>
+              <td class="up">+110%</td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">76%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:76%;background:#2563eb;height:100%"></div>
+      <div style="width:24%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">24%</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 ¥172.3M</span>
+    <span>🏨 ¥53.78M</span>
+  </div>
+</div></td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">94%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:94%;background:#2563eb;height:100%"></div>
+      <div style="width:6%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">6%</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 299,003</span>
+    <span>🏨 17,793</span>
+  </div>
+</div></td>
+            </tr>
+<tr>
+              <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#dc2626;margin-right:4px"></span><b>香港迪士尼乐园</b><br><span style="color:#64748b;font-size:11px">Hong Kong Disneyland</span></td>
+              <td><span class="badge badge-strategic">Strategic</span></td>
+              <td>HK 香港</td>
+              <td>¥218.99M</td>
+              <td class="up">+41%</td>
+              <td>¥115.95M</td>
+              <td class="dn">-1%</td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">76%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:76%;background:#dc2626;height:100%"></div>
+      <div style="width:24%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">24%</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 ¥168.02M</span>
+    <span>🏨 ¥50.97M</span>
+  </div>
+</div></td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">93%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:93%;background:#dc2626;height:100%"></div>
+      <div style="width:7%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">7%</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 292,360</span>
+    <span>🏨 19,817</span>
+  </div>
+</div></td>
+            </tr>
+<tr>
+              <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#16a34a;margin-right:4px"></span><b>长隆集团</b><br><span style="color:#64748b;font-size:11px">Chimelong Group</span></td>
+              <td><span class="badge badge-potential">Pot. Strategic</span></td>
+              <td>CN 广东</td>
+              <td>¥135.61M</td>
+              <td class="up">+89%</td>
+              <td>¥90.97M</td>
+              <td class="up">+23%</td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">20%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:20%;background:#16a34a;height:100%"></div>
+      <div style="width:80%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">80%</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 ¥27.31M</span>
+    <span>🏨 ¥108.3M<span style="font-size:9px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 4px;margin-left:3px;font-weight:700">酒店主导</span></span>
+  </div>
+</div></td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">53%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:53%;background:#16a34a;height:100%"></div>
+      <div style="width:47%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">47%</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 60,111</span>
+    <span>🏨 51,211<span style="font-size:9px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 4px;margin-left:3px;font-weight:700">RN主导</span></span>
+  </div>
+</div></td>
+            </tr>
+<tr>
+              <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#7c3aed;margin-right:4px"></span><b>北京环球度假区</b><br><span style="color:#64748b;font-size:11px">Universal Beijing Resort</span></td>
+              <td><span class="badge badge-potential">Pot. Strategic</span></td>
+              <td>CN 北京</td>
+              <td>¥65.67M</td>
+              <td class="up">+180%</td>
+              <td>¥88.13M</td>
+              <td class="up">+207%</td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">78%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:78%;background:#7c3aed;height:100%"></div>
+      <div style="width:22%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">22%</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 ¥51.59M</span>
+    <span>🏨 ¥14.08M</span>
+  </div>
+</div></td>
+              <td><div style="font-size:10px;width:100%">
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+    <span style="color:#334155;font-weight:600;min-width:28px">92%</span>
+    <div style="flex:1;height:10px;background:#e2e8f0;border-radius:4px;overflow:hidden;display:flex">
+      <div style="width:92%;background:#7c3aed;height:100%"></div>
+      <div style="width:8%;background:#94a3b8;height:100%"></div>
+    </div>
+    <span style="color:#64748b;min-width:28px;text-align:right">8%</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#64748b">
+    <span>🎡 73,082</span>
+    <span>🏨 6,218</span>
+  </div>
+</div></td>
+            </tr></tbody>
+    </table>
+  </div>
+
+  <div class="section-title">KA 详细趋势 — 年度 + 月度对比</div>
+  <div class="data-note" style="margin-bottom:16px">
+    <b>图表说明：</b>年度趋势为 ANT+HTL 堆叠柱状图（2022–2026*，* 表示截至今日数据）；月度折线图门票与酒店分开展示，方便对比季节性节奏。Top 3 市场基于 2025 全年门票 GMV。
+  </div>
+  <div class="ka-grid"><div class="ka-card">
+  <div class="ka-card-header" style="background:#0891b2">
+    <div>
+      <div style="font-size:15px;font-weight:700">日本环球影城 &nbsp;<span style="font-size:11px;font-weight:400;opacity:.85">Universal Studios Japan</span></div>
+      <div style="margin-top:4px;font-size:11px;opacity:.85">JP 大阪 &nbsp;·&nbsp; ANT Only</div>
+    </div>
+    <span class="badge badge-potential" style="font-size:10px;white-space:nowrap">Potential Strategic</span>
+  </div>
+  <div class="ka-card-body">
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi-item">
+        <div class="kpi-val">¥263.9M</div>
+        <div class="kpi-label">Total GMV 2025</div>
+        <div class="kpi-yoy" style="color:#16a34a">+53% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item">
+        <div class="kpi-val">¥125.04M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥125.04M / HTL —</span></div>
+        <div class="kpi-yoy" style="color:#dc2626">-26% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item" style="flex:1.4">
+        <div style="font-size:10px;color:#64748b;margin-bottom:4px;font-weight:600">Top 3 客源市场 (2025 ANT GMV)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px"><span style="background:rgba(8,145,178,0.15);color:#0891b2;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#1 HK 25%</span> <span style="background:rgba(8,145,178,0.15);color:#0891b2;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#2 KR 25%</span> <span style="background:rgba(8,145,178,0.15);color:#0891b2;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#3 TW 12%</span> </div>
+      </div>
+    </div>
+
+    <!-- ANT / HTL detail -->
+    <div class="detail-section">
+        <div class="detail-row">
+          <span class="detail-label">🎡 门票 GMV 2025</span>
+          <span class="detail-val">¥263.9M <span class="detail-share">(100% of total)</span></span>
+          <span class="detail-extra">QTY: 385,874</span>
+        </div></div>
+
+    <div class="divider"></div>
+
+    <!-- Charts: annual stacked -->
+    <div class="chart-block">
+      <div class="chart-title">年度 GMV 趋势 (¥M) — ANT + HTL 堆叠</div>
+      <div class="chart-wrap-tall"><canvas id="ann_usj"></canvas></div>
+    </div>
+
+    <!-- Charts: monthly ANT -->
+    <div class="chart-block">
+      <div class="chart-title">月度 GMV — 门票 (¥M)：2025 vs 2026</div>
+      <div class="chart-wrap-tall"><canvas id="mon_tnt_usj"></canvas></div>
+    </div>
+    
+  </div>
+</div>
+<div class="ka-card">
+  <div class="ka-card-header" style="background:#2563eb">
+    <div>
+      <div style="font-size:15px;font-weight:700">上海迪士尼度假区 &nbsp;<span style="font-size:11px;font-weight:400;opacity:.85">Shanghai Disney Resort</span></div>
+      <div style="margin-top:4px;font-size:11px;opacity:.85">CN 上海 &nbsp;·&nbsp; HTL+ANT</div>
+    </div>
+    <span class="badge badge-potential" style="font-size:10px;white-space:nowrap">Potential Strategic</span>
+  </div>
+  <div class="ka-card-body">
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi-item">
+        <div class="kpi-val">¥226.08M</div>
+        <div class="kpi-label">Total GMV 2025</div>
+        <div class="kpi-yoy" style="color:#16a34a">+239% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item">
+        <div class="kpi-val">¥227.03M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥174.0M / HTL ¥53.03M</span></div>
+        <div class="kpi-yoy" style="color:#16a34a">+110% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item" style="flex:1.4">
+        <div style="font-size:10px;color:#64748b;margin-bottom:4px;font-weight:600">Top 3 客源市场 (2025 ANT GMV)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px"><span style="background:rgba(37,99,235,0.15);color:#2563eb;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#1 KR 20%</span> <span style="background:rgba(37,99,235,0.15);color:#2563eb;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#2 XX 11%</span> <span style="background:rgba(37,99,235,0.15);color:#2563eb;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#3 TH 11%</span> </div>
+      </div>
+    </div>
+
+    <!-- ANT / HTL detail -->
+    <div class="detail-section">
+        <div class="detail-row">
+          <span class="detail-label">🎡 门票 GMV 2025</span>
+          <span class="detail-val">¥172.3M <span class="detail-share">(76% of total)</span></span>
+          <span class="detail-extra">QTY: 299,003</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">🏨 酒店 GMV 2025</span>
+          <span class="detail-val">¥53.78M <span class="detail-share">(24% of total)</span></span>
+          <span class="detail-extra">RN: 17,793</span>
+        </div></div>
+
+    <div class="divider"></div>
+
+    <!-- Charts: annual stacked -->
+    <div class="chart-block">
+      <div class="chart-title">年度 GMV 趋势 (¥M) — ANT + HTL 堆叠</div>
+      <div class="chart-wrap-tall"><canvas id="ann_shdl"></canvas></div>
+    </div>
+
+    <!-- Charts: monthly ANT -->
+    <div class="chart-block">
+      <div class="chart-title">月度 GMV — 门票 (¥M)：2025 vs 2026</div>
+      <div class="chart-wrap-tall"><canvas id="mon_tnt_shdl"></canvas></div>
+    </div>
+    
+      <div class="chart-block">
+        <div class="chart-title">月度 GMV — 酒店 (¥M)：2025 vs 2026</div>
+        <div class="chart-wrap-tall"><canvas id="mon_htl_shdl"></canvas></div>
+      </div>
+  </div>
+</div>
+<div class="ka-card">
+  <div class="ka-card-header" style="background:#dc2626">
+    <div>
+      <div style="font-size:15px;font-weight:700">香港迪士尼乐园 &nbsp;<span style="font-size:11px;font-weight:400;opacity:.85">Hong Kong Disneyland</span></div>
+      <div style="margin-top:4px;font-size:11px;opacity:.85">HK 香港 &nbsp;·&nbsp; HTL+ANT</div>
+    </div>
+    <span class="badge badge-strategic" style="font-size:10px;white-space:nowrap">⭐ Strategic</span>
+  </div>
+  <div class="ka-card-body">
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi-item">
+        <div class="kpi-val">¥218.99M</div>
+        <div class="kpi-label">Total GMV 2025</div>
+        <div class="kpi-yoy" style="color:#16a34a">+41% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item">
+        <div class="kpi-val">¥115.95M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥93.31M / HTL ¥22.64M</span></div>
+        <div class="kpi-yoy" style="color:#dc2626">-1% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item" style="flex:1.4">
+        <div style="font-size:10px;color:#64748b;margin-bottom:4px;font-weight:600">Top 3 客源市场 (2025 ANT GMV)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px"><span style="background:rgba(220,38,38,0.15);color:#dc2626;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#1 HK 39%</span> <span style="background:rgba(220,38,38,0.15);color:#dc2626;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#2 TW 12%</span> <span style="background:rgba(220,38,38,0.15);color:#dc2626;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#3 TH 9%</span> </div>
+      </div>
+    </div>
+
+    <!-- ANT / HTL detail -->
+    <div class="detail-section">
+        <div class="detail-row">
+          <span class="detail-label">🎡 门票 GMV 2025</span>
+          <span class="detail-val">¥168.02M <span class="detail-share">(76% of total)</span></span>
+          <span class="detail-extra">QTY: 292,360</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">🏨 酒店 GMV 2025</span>
+          <span class="detail-val">¥50.97M <span class="detail-share">(24% of total)</span></span>
+          <span class="detail-extra">RN: 19,817</span>
+        </div></div>
+
+    <div class="divider"></div>
+
+    <!-- Charts: annual stacked -->
+    <div class="chart-block">
+      <div class="chart-title">年度 GMV 趋势 (¥M) — ANT + HTL 堆叠</div>
+      <div class="chart-wrap-tall"><canvas id="ann_hkd"></canvas></div>
+    </div>
+
+    <!-- Charts: monthly ANT -->
+    <div class="chart-block">
+      <div class="chart-title">月度 GMV — 门票 (¥M)：2025 vs 2026</div>
+      <div class="chart-wrap-tall"><canvas id="mon_tnt_hkd"></canvas></div>
+    </div>
+    
+      <div class="chart-block">
+        <div class="chart-title">月度 GMV — 酒店 (¥M)：2025 vs 2026</div>
+        <div class="chart-wrap-tall"><canvas id="mon_htl_hkd"></canvas></div>
+      </div>
+  </div>
+</div>
+<div class="ka-card">
+  <div class="ka-card-header" style="background:#16a34a">
+    <div>
+      <div style="font-size:15px;font-weight:700">长隆集团 &nbsp;<span style="font-size:11px;font-weight:400;opacity:.85">Chimelong Group</span></div>
+      <div style="margin-top:4px;font-size:11px;opacity:.85">CN 广东 &nbsp;·&nbsp; HTL+ANT</div>
+    </div>
+    <span class="badge badge-potential" style="font-size:10px;white-space:nowrap">Potential Strategic</span>
+  </div>
+  <div class="ka-card-body">
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi-item">
+        <div class="kpi-val">¥135.61M</div>
+        <div class="kpi-label">Total GMV 2025</div>
+        <div class="kpi-yoy" style="color:#16a34a">+89% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item">
+        <div class="kpi-val">¥90.97M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥23.27M / HTL ¥67.7M</span></div>
+        <div class="kpi-yoy" style="color:#16a34a">+23% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item" style="flex:1.4">
+        <div style="font-size:10px;color:#64748b;margin-bottom:4px;font-weight:600">Top 3 客源市场 (2025 ANT GMV)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px"><span style="background:rgba(22,163,74,0.15);color:#16a34a;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#1 HK 63%</span> <span style="background:rgba(22,163,74,0.15);color:#16a34a;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#2 SG 6%</span> <span style="background:rgba(22,163,74,0.15);color:#16a34a;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#3 MY 5%</span> </div>
+      </div>
+    </div>
+
+    <!-- ANT / HTL detail -->
+    <div class="detail-section">
+        <div class="detail-row">
+          <span class="detail-label">🎡 门票 GMV 2025</span>
+          <span class="detail-val">¥27.31M <span class="detail-share">(20% of total)</span></span>
+          <span class="detail-extra">QTY: 60,111</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">🏨 酒店 GMV 2025</span>
+          <span class="detail-val">¥108.3M <span class="detail-share">(80% of total)</span></span>
+          <span class="detail-extra">RN: 51,211</span>
+        </div></div>
+
+    <div class="divider"></div>
+
+    <!-- Charts: annual stacked -->
+    <div class="chart-block">
+      <div class="chart-title">年度 GMV 趋势 (¥M) — ANT + HTL 堆叠</div>
+      <div class="chart-wrap-tall"><canvas id="ann_chimelong"></canvas></div>
+    </div>
+
+    <!-- Charts: monthly ANT -->
+    <div class="chart-block">
+      <div class="chart-title">月度 GMV — 门票 (¥M)：2025 vs 2026</div>
+      <div class="chart-wrap-tall"><canvas id="mon_tnt_chimelong"></canvas></div>
+    </div>
+    
+      <div class="chart-block">
+        <div class="chart-title">月度 GMV — 酒店 (¥M)：2025 vs 2026</div>
+        <div class="chart-wrap-tall"><canvas id="mon_htl_chimelong"></canvas></div>
+      </div>
+  </div>
+</div>
+<div class="ka-card">
+  <div class="ka-card-header" style="background:#7c3aed">
+    <div>
+      <div style="font-size:15px;font-weight:700">北京环球度假区 &nbsp;<span style="font-size:11px;font-weight:400;opacity:.85">Universal Beijing Resort</span></div>
+      <div style="margin-top:4px;font-size:11px;opacity:.85">CN 北京 &nbsp;·&nbsp; HTL+ANT</div>
+    </div>
+    <span class="badge badge-potential" style="font-size:10px;white-space:nowrap">Potential Strategic</span>
+  </div>
+  <div class="ka-card-body">
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi-item">
+        <div class="kpi-val">¥65.67M</div>
+        <div class="kpi-label">Total GMV 2025</div>
+        <div class="kpi-yoy" style="color:#16a34a">+180% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item">
+        <div class="kpi-val">¥88.13M</div>
+        <div class="kpi-label">2026 YTD<br><span style="font-size:9px;color:#94a3b8">ANT ¥76.33M / HTL ¥11.8M</span></div>
+        <div class="kpi-yoy" style="color:#16a34a">+207% YoY</div>
+      </div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-item" style="flex:1.4">
+        <div style="font-size:10px;color:#64748b;margin-bottom:4px;font-weight:600">Top 3 客源市场 (2025 ANT GMV)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px"><span style="background:rgba(124,58,237,0.15);color:#7c3aed;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#1 XX 22%</span> <span style="background:rgba(124,58,237,0.15);color:#7c3aed;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#2 RU 15%</span> <span style="background:rgba(124,58,237,0.15);color:#7c3aed;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600">#3 HK 13%</span> </div>
+      </div>
+    </div>
+
+    <!-- ANT / HTL detail -->
+    <div class="detail-section">
+        <div class="detail-row">
+          <span class="detail-label">🎡 门票 GMV 2025</span>
+          <span class="detail-val">¥51.59M <span class="detail-share">(78% of total)</span></span>
+          <span class="detail-extra">QTY: 73,082</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">🏨 酒店 GMV 2025</span>
+          <span class="detail-val">¥14.08M <span class="detail-share">(22% of total)</span></span>
+          <span class="detail-extra">RN: 6,218</span>
+        </div></div>
+
+    <div class="divider"></div>
+
+    <!-- Charts: annual stacked -->
+    <div class="chart-block">
+      <div class="chart-title">年度 GMV 趋势 (¥M) — ANT + HTL 堆叠</div>
+      <div class="chart-wrap-tall"><canvas id="ann_ubr"></canvas></div>
+    </div>
+
+    <!-- Charts: monthly ANT -->
+    <div class="chart-block">
+      <div class="chart-title">月度 GMV — 门票 (¥M)：2025 vs 2026</div>
+      <div class="chart-wrap-tall"><canvas id="mon_tnt_ubr"></canvas></div>
+    </div>
+    
+      <div class="chart-block">
+        <div class="chart-title">月度 GMV — 酒店 (¥M)：2025 vs 2026</div>
+        <div class="chart-wrap-tall"><canvas id="mon_htl_ubr"></canvas></div>
+      </div>
+  </div>
+</div></div>
+
+  <div class="section-title" style="margin-top:28px">2026 营销打法建议</div>
+  <div class="data-note" style="margin-bottom:16px">
+    <b>说明：</b>策略建议基于各 KA 2025 全年表现、2026 YTD 趋势及市场结构，结合 Trip.com 平台资源视角生成，供参考讨论。
+  </div>
+  <div class="strategy-grid"><div class="strat-card">
+  <div class="strat-header" style="background:#0891b2">
+    <div>
+      <div class="strat-header-title">日本环球影城 &nbsp;<span style="font-size:10px;font-weight:400;opacity:.85">Universal Studios Japan</span></div>
+    </div>
+    <span class="badge badge-potential" style="font-size:9px;white-space:nowrap">Pot. Strategic</span>
+  </div>
+  <div class="strat-signals"><span class="strat-signal signal-dn">YTD -26% YoY</span><span class="strat-signal signal-neu">#1 HK 25%</span><span class="strat-signal signal-neu">#2 KR 25%</span></div>
+  <div class="strat-body"><div class="strat-item">
+          <div class="strat-num">1</div>
+          <div class="strat-text"><b>📉 YTD 下滑止血优先</b> — YTD -31%，需排查价格竞争/汇率/替代目的地等因素，Q3 前制定针对性恢复方案。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">2</div>
+          <div class="strat-text"><b>💴 日元窗口精准促销</b> — 日元相对弱势期是吸引海外游客的核心窗口，配合汇率敏感节点（低谷期）推限时特价产品，重点运营 HK/TW/SG/KR 市场。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">3</div>
+          <div class="strat-text"><b>🌏 多市场均衡运营</b> — 降低对单一客源市场依赖，均衡运营 HK/TW/SG/KR/MY，设置各市场分目标追踪。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">4</div>
+          <div class="strat-text"><b>🎮 超级任天堂 IP 破圈</b> — 围绕超级任天堂世界差异化 IP 内容做创意营销，吸引 IP 粉丝群体，撬动年轻客群增量。</div>
+        </div></div>
+</div>
+<div class="strat-card">
+  <div class="strat-header" style="background:#2563eb">
+    <div>
+      <div class="strat-header-title">上海迪士尼度假区 &nbsp;<span style="font-size:10px;font-weight:400;opacity:.85">Shanghai Disney Resort</span></div>
+    </div>
+    <span class="badge badge-potential" style="font-size:9px;white-space:nowrap">Pot. Strategic</span>
+  </div>
+  <div class="strat-signals"><span class="strat-signal signal-up">YTD +110% YoY</span><span class="strat-signal signal-neu">HTL 23% GMV</span><span class="strat-signal signal-neu">#1 KR 20%</span><span class="strat-signal signal-neu">#2 XX 11%</span></div>
+  <div class="strat-body"><div class="strat-item">
+          <div class="strat-num">1</div>
+          <div class="strat-text"><b>🚀 复制 SBD×Mega 高增长打法</b> — 2025 +239%、YTD +95% 的核心驱动是 SBD+Mega 联动，持续深化该机制，确保每季度至少一次联合活动。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">2</div>
+          <div class="strat-text"><b>🌍 加码国际客源</b> — 持续激活 KR/SG/HK/TW 等海外市场，配合 Trip 海外站资源与本地化创意素材差异运营。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">3</div>
+          <div class="strat-text"><b>🏨 酒店渗透提升</b> — 酒店占比 24%/RN 仅 6%，推 Resort 深度体验套餐（含园区快速通关权益），提升住宿连带。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">4</div>
+          <div class="strat-text"><b>🎉 10 周年超级节点</b> — 2026 年是园区 10 周年，需提前 Q1 规划全年最大营销节点，争取 Trip 首发/独家资源。</div>
+        </div></div>
+</div>
+<div class="strat-card">
+  <div class="strat-header" style="background:#dc2626">
+    <div>
+      <div class="strat-header-title">香港迪士尼乐园 &nbsp;<span style="font-size:10px;font-weight:400;opacity:.85">Hong Kong Disneyland</span></div>
+    </div>
+    <span class="badge badge-strategic" style="font-size:9px;white-space:nowrap">⭐ Strategic</span>
+  </div>
+  <div class="strat-signals"><span class="strat-signal signal-dn">YTD -1% YoY</span><span class="strat-signal signal-neu">HTL 23% GMV</span><span class="strat-signal signal-neu">#1 HK 39%</span><span class="strat-signal signal-neu">#2 TW 12%</span></div>
+  <div class="strat-body"><div class="strat-item">
+          <div class="strat-num">1</div>
+          <div class="strat-text"><b>🌏 激活东南亚市场</b> — 本地客依赖度高，重点拓展 SG/MY/TH 等东南亚客源，配合 Trip 海外站 Mega/SBD 资源定向投放。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">2</div>
+          <div class="strat-text"><b>🏨 门票+酒店打包提客单</b> — 酒店占比 24%，推 Ticket+Hotel bundle 独家套餐，提升人均消费与连带率。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">3</div>
+          <div class="strat-text"><b>🗓️ IP 档期独家锁单</b> — 万圣节/圣诞/新年 IP 档期提前 6–8 周上线 Trip 独家早鸟，绑定节日旺季流量。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">4</div>
+          <div class="strat-text"><b>📊 下半年反弹计划</b> — YTD 持平需破局，聚焦 Q3–Q4 节日旺季提前蓄水，设置 GMV 里程碑预警。</div>
+        </div></div>
+</div>
+<div class="strat-card">
+  <div class="strat-header" style="background:#16a34a">
+    <div>
+      <div class="strat-header-title">长隆集团 &nbsp;<span style="font-size:10px;font-weight:400;opacity:.85">Chimelong Group</span></div>
+    </div>
+    <span class="badge badge-potential" style="font-size:9px;white-space:nowrap">Pot. Strategic</span>
+  </div>
+  <div class="strat-signals"><span class="strat-signal signal-up">YTD +23% YoY</span><span class="strat-signal signal-neu">HTL 79% GMV</span><span class="strat-signal signal-neu">#1 HK 63%</span><span class="strat-signal signal-neu">#2 SG 6%</span></div>
+  <div class="strat-body"><div class="strat-item">
+          <div class="strat-num">1</div>
+          <div class="strat-text"><b>🏨 酒店×门票联动提渗透</b> — 酒店主导（80% GMV），重点打通住宿+门票连带，推「住长隆送门票」组合，提升 ANT 渗透率。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">2</div>
+          <div class="strat-text"><b>🎡 ANT 增长空间挖掘</b> — 门票仅占 20%，对标行业均值有较大提升空间，主推亲子套票/多日票/园区组合产品。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">3</div>
+          <div class="strat-text"><b>🌊 暑期旺季提前锁单</b> — 水上乐园暑期是核心流量窗口，提前 6 周开启预售，配合 Trip 暑期专题获取站内曝光。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">4</div>
+          <div class="strat-text"><b>🌏 港澳客源差异化</b> — 大湾区核心市场，配合节假日档期定向运营港澳客，推跨境便捷出行+园区套票组合。</div>
+        </div></div>
+</div>
+<div class="strat-card">
+  <div class="strat-header" style="background:#7c3aed">
+    <div>
+      <div class="strat-header-title">北京环球度假区 &nbsp;<span style="font-size:10px;font-weight:400;opacity:.85">Universal Beijing Resort</span></div>
+    </div>
+    <span class="badge badge-potential" style="font-size:9px;white-space:nowrap">Pot. Strategic</span>
+  </div>
+  <div class="strat-signals"><span class="strat-signal signal-up">YTD +207% YoY</span><span class="strat-signal signal-neu">HTL 21% GMV</span><span class="strat-signal signal-neu">#1 XX 22%</span><span class="strat-signal signal-neu">#2 RU 15%</span></div>
+  <div class="strat-body"><div class="strat-item">
+          <div class="strat-num">1</div>
+          <div class="strat-text"><b>🚀 乘势爬坡扩渗透</b> — YTD +197% 处于高速成长期，重点扩大 Trip 渗透率，争取更多站内流量位资源。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">2</div>
+          <div class="strat-text"><b>🌏 试水海外客源</b> — 当前以 HK/TW 为主，配合 Trip 海外站（KR/SG/MY）进一步导流，测试更多海外市场对北京 IP 主题乐园的响应。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">3</div>
+          <div class="strat-text"><b>🏨 Resort 套餐渗透</b> — 酒店占比 22%，配套酒店 2 家，推 Resort 体验套餐（含 IP 限定早餐/优先入场），提升住宿连带。</div>
+        </div><div class="strat-item">
+          <div class="strat-num">4</div>
+          <div class="strat-text"><b>🎭 IP 档期精准运营</b> — 哈利波特/变形金刚等 IP 新区开放节点是高价值流量窗口，提前规划 Trip 专属限定产品。</div>
+        </div></div>
+</div></div>
+</div>
+
+<div class="footer">景酒集团 KA Tracking · Generated 2026-07-27 18:29 · trip-ibu-adhoc BQ · 含所有 orderstatus</div>
+
+<script>
+Chart.defaults.font.family = '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+Chart.defaults.font.size = 10;
+
+// Universal Studios Japan — annual
+new Chart(document.getElementById('ann_usj'), {
+  type: 'bar',
+  plugins: [ChartDataLabels],
+  data: {
+    labels: ["2022", "2023", "2024", "2025", "2026*"],
+    datasets: [
+      { label: 'ANT', data: [3.05, 46.74, 172.24, 263.9, 125.04], backgroundColor: 'rgba(8,145,178,0.85)',
+         datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [3.05, 46.74, 172.24, 263.9, 125.04][ctx.dataIndex];
+             const htl = [0, 0, 0, 0, 0][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || tnt===0) return '';
+             return Math.round(tnt/tot*100)+'%';
+           }
+         }
+      },
+      { label: 'HTL', data: [0, 0, 0, 0, 0], backgroundColor: 'rgba(8,145,178,0.35)',
+         datalabels: { anchor:'center', align:'center', color:'#0891b2', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [3.05, 46.74, 172.24, 263.9, 125.04][ctx.dataIndex];
+             const htl = [0, 0, 0, 0, 0][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || htl===0) return '';
+             return Math.round(htl/tot*100)+'%';
+           }
+         }
+      }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels: { font:{size:10}, boxWidth:8 } },
+      tooltip: { callbacks: { label: c => `¥${c.parsed.y}M` } },
+      datalabels: {}
+    },
+    scales: {
+      x: { stacked:true, ticks:{font:{size:10}}, grid:{display:false} },
+      y: { stacked:true, ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} }
+    }
+  }
+});
+// Universal Studios Japan — monthly ANT
+new Chart(document.getElementById('mon_tnt_usj'), {
+  type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      { label: '2025 ANT', data: [22.33, 26.87, 33.37, 25.85, 25.46, 16.76, 16.25, 16.47, 17.66, 17.69, 19.22, 23.07], borderColor:'#94a3b8',
+         backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
+         yAxisID:'y', datalabels:{display:false} },
+      { label: '2026 ANT', data: [20.78, 18.31, 19.4, 16.32, 17.33, 16.87, 16.04, null, null, null, null, null], borderColor:'#0891b2',
+         backgroundColor:'rgba(8,145,178,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
+         yAxisID:'y', datalabels:{display:false},
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
+      { label: 'YoY%', data: [-6.9, -31.9, -41.9, -36.9, -31.9, 0.7, -1.3, null, null, null, null, null], borderColor:'#f59e0b',
+         backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
+         borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels:{font:{size:10}, boxWidth:8} },
+      tooltip: { callbacks: { label: c => c.dataset.yAxisID==='yoy'
+        ? (c.parsed.y!=null?c.parsed.y+'%':'—')
+        : (c.parsed.y!=null?`¥${c.parsed.y}M`:'—') } },
+      datalabels: {display:false}
+    },
+    scales: {
+      x: { ticks:{font:{size:10}}, grid:{display:false} },
+      y: { ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} },
+      yoy: { position:'right', ticks:{font:{size:9}, color:'#f59e0b', callback: v=>v+'%'},
+              grid:{display:false} }
+    }
+  }
+});
+
+// Shanghai Disney Resort — annual
+new Chart(document.getElementById('ann_shdl'), {
+  type: 'bar',
+  plugins: [ChartDataLabels],
+  data: {
+    labels: ["2022", "2023", "2024", "2025", "2026*"],
+    datasets: [
+      { label: 'ANT', data: [0.16, 6.71, 46.19, 172.3, 174.0], backgroundColor: 'rgba(37,99,235,0.85)',
+         datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [0.16, 6.71, 46.19, 172.3, 174.0][ctx.dataIndex];
+             const htl = [0.84, 10.9, 20.41, 53.78, 53.03][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || tnt===0) return '';
+             return Math.round(tnt/tot*100)+'%';
+           }
+         }
+      },
+      { label: 'HTL', data: [0.84, 10.9, 20.41, 53.78, 53.03], backgroundColor: 'rgba(37,99,235,0.35)',
+         datalabels: { anchor:'center', align:'center', color:'#2563eb', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [0.16, 6.71, 46.19, 172.3, 174.0][ctx.dataIndex];
+             const htl = [0.84, 10.9, 20.41, 53.78, 53.03][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || htl===0) return '';
+             return Math.round(htl/tot*100)+'%';
+           }
+         }
+      }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels: { font:{size:10}, boxWidth:8 } },
+      tooltip: { callbacks: { label: c => `¥${c.parsed.y}M` } },
+      datalabels: {}
+    },
+    scales: {
+      x: { stacked:true, ticks:{font:{size:10}}, grid:{display:false} },
+      y: { stacked:true, ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} }
+    }
+  }
+});
+// Shanghai Disney Resort — monthly ANT
+new Chart(document.getElementById('mon_tnt_shdl'), {
+  type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      { label: '2025 ANT', data: [7.25, 7.97, 11.94, 14.71, 12.46, 12.37, 11.05, 10.97, 10.68, 17.54, 20.53, 32.26], borderColor:'#94a3b8',
+         backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
+         yAxisID:'y', datalabels:{display:false} },
+      { label: '2026 ANT', data: [18.49, 12.17, 31.78, 28.33, 27.32, 25.81, 30.1, null, null, null, null, null], borderColor:'#2563eb',
+         backgroundColor:'rgba(37,99,235,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
+         yAxisID:'y', datalabels:{display:false},
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
+      { label: 'YoY%', data: [155.0, 52.7, 166.2, 92.6, 119.3, 108.6, 172.4, null, null, null, null, null], borderColor:'#f59e0b',
+         backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
+         borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels:{font:{size:10}, boxWidth:8} },
+      tooltip: { callbacks: { label: c => c.dataset.yAxisID==='yoy'
+        ? (c.parsed.y!=null?c.parsed.y+'%':'—')
+        : (c.parsed.y!=null?`¥${c.parsed.y}M`:'—') } },
+      datalabels: {display:false}
+    },
+    scales: {
+      x: { ticks:{font:{size:10}}, grid:{display:false} },
+      y: { ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} },
+      yoy: { position:'right', ticks:{font:{size:9}, color:'#f59e0b', callback: v=>v+'%'},
+              grid:{display:false} }
+    }
+  }
+});
+
+// Shanghai Disney Resort — monthly HTL
+new Chart(document.getElementById('mon_htl_shdl'), {
+  type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      { label: '2025 HTL', data: [3.02, 3.5, 4.11, 4.42, 4.62, 4.74, 4.38, 5.07, 4.65, 4.68, 4.82, 4.76], borderColor:'#94a3b8',
+         backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
+         yAxisID:'y', datalabels:{display:false} },
+      { label: '2026 HTL', data: [5.08, 4.73, 6.94, 8.83, 8.98, 9.32, 9.17, null, null, null, null, null], borderColor:'#2563eb',
+         backgroundColor:'rgba(37,99,235,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
+         yAxisID:'y', datalabels:{display:false},
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
+      { label: 'YoY%', data: [68.2, 35.1, 68.9, 99.8, 94.4, 96.6, 109.4, null, null, null, null, null], borderColor:'#f59e0b',
+         backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
+         borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels:{font:{size:10}, boxWidth:8} },
+      tooltip: { callbacks: { label: c => c.dataset.yAxisID==='yoy'
+        ? (c.parsed.y!=null?c.parsed.y+'%':'—')
+        : (c.parsed.y!=null?`¥${c.parsed.y}M`:'—') } },
+      datalabels: {display:false}
+    },
+    scales: {
+      x: { ticks:{font:{size:10}}, grid:{display:false} },
+      y: { ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} },
+      yoy: { position:'right', ticks:{font:{size:9}, color:'#f59e0b', callback: v=>v+'%'},
+              grid:{display:false} }
+    }
+  }
+});
+
+// Hong Kong Disneyland — annual
+new Chart(document.getElementById('ann_hkd'), {
+  type: 'bar',
+  plugins: [ChartDataLabels],
+  data: {
+    labels: ["2022", "2023", "2024", "2025", "2026*"],
+    datasets: [
+      { label: 'ANT', data: [14.39, 64.38, 118.7, 168.02, 93.31], backgroundColor: 'rgba(220,38,38,0.85)',
+         datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [14.39, 64.38, 118.7, 168.02, 93.31][ctx.dataIndex];
+             const htl = [31.86, 49.56, 36.37, 50.97, 22.64][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || tnt===0) return '';
+             return Math.round(tnt/tot*100)+'%';
+           }
+         }
+      },
+      { label: 'HTL', data: [31.86, 49.56, 36.37, 50.97, 22.64], backgroundColor: 'rgba(220,38,38,0.35)',
+         datalabels: { anchor:'center', align:'center', color:'#dc2626', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [14.39, 64.38, 118.7, 168.02, 93.31][ctx.dataIndex];
+             const htl = [31.86, 49.56, 36.37, 50.97, 22.64][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || htl===0) return '';
+             return Math.round(htl/tot*100)+'%';
+           }
+         }
+      }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels: { font:{size:10}, boxWidth:8 } },
+      tooltip: { callbacks: { label: c => `¥${c.parsed.y}M` } },
+      datalabels: {}
+    },
+    scales: {
+      x: { stacked:true, ticks:{font:{size:10}}, grid:{display:false} },
+      y: { stacked:true, ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} }
+    }
+  }
+});
+// Hong Kong Disneyland — monthly ANT
+new Chart(document.getElementById('mon_tnt_hkd'), {
+  type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      { label: '2025 ANT', data: [13.52, 12.77, 15.45, 13.8, 10.33, 10.56, 11.78, 13.13, 9.71, 12.57, 14.71, 27.18], borderColor:'#94a3b8',
+         backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
+         yAxisID:'y', datalabels:{display:false} },
+      { label: '2026 ANT', data: [16.98, 11.23, 14.06, 11.14, 9.74, 20.05, 10.11, null, null, null, null, null], borderColor:'#dc2626',
+         backgroundColor:'rgba(220,38,38,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
+         yAxisID:'y', datalabels:{display:false},
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
+      { label: 'YoY%', data: [25.6, -12.1, -9.0, -19.3, -5.7, 89.9, -14.2, null, null, null, null, null], borderColor:'#f59e0b',
+         backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
+         borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels:{font:{size:10}, boxWidth:8} },
+      tooltip: { callbacks: { label: c => c.dataset.yAxisID==='yoy'
+        ? (c.parsed.y!=null?c.parsed.y+'%':'—')
+        : (c.parsed.y!=null?`¥${c.parsed.y}M`:'—') } },
+      datalabels: {display:false}
+    },
+    scales: {
+      x: { ticks:{font:{size:10}}, grid:{display:false} },
+      y: { ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} },
+      yoy: { position:'right', ticks:{font:{size:9}, color:'#f59e0b', callback: v=>v+'%'},
+              grid:{display:false} }
+    }
+  }
+});
+
+// Hong Kong Disneyland — monthly HTL
+new Chart(document.getElementById('mon_htl_hkd'), {
+  type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      { label: '2025 HTL', data: [3.82, 3.54, 4.92, 3.75, 3.53, 3.89, 4.47, 5.02, 4.16, 4.09, 4.82, 3.97], borderColor:'#94a3b8',
+         backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
+         yAxisID:'y', datalabels:{display:false} },
+      { label: '2026 HTL', data: [3.0, 2.73, 3.61, 2.89, 3.76, 3.48, 3.17, null, null, null, null, null], borderColor:'#dc2626',
+         backgroundColor:'rgba(220,38,38,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
+         yAxisID:'y', datalabels:{display:false},
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
+      { label: 'YoY%', data: [-21.5, -22.9, -26.6, -22.9, 6.5, -10.5, -29.1, null, null, null, null, null], borderColor:'#f59e0b',
+         backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
+         borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels:{font:{size:10}, boxWidth:8} },
+      tooltip: { callbacks: { label: c => c.dataset.yAxisID==='yoy'
+        ? (c.parsed.y!=null?c.parsed.y+'%':'—')
+        : (c.parsed.y!=null?`¥${c.parsed.y}M`:'—') } },
+      datalabels: {display:false}
+    },
+    scales: {
+      x: { ticks:{font:{size:10}}, grid:{display:false} },
+      y: { ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} },
+      yoy: { position:'right', ticks:{font:{size:9}, color:'#f59e0b', callback: v=>v+'%'},
+              grid:{display:false} }
+    }
+  }
+});
+
+// Chimelong Group — annual
+new Chart(document.getElementById('ann_chimelong'), {
+  type: 'bar',
+  plugins: [ChartDataLabels],
+  data: {
+    labels: ["2022", "2023", "2024", "2025", "2026*"],
+    datasets: [
+      { label: 'ANT', data: [0.02, 3.69, 11.69, 27.31, 23.27], backgroundColor: 'rgba(22,163,74,0.85)',
+         datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [0.02, 3.69, 11.69, 27.31, 23.27][ctx.dataIndex];
+             const htl = [0.63, 30.4, 60.19, 108.3, 67.7][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || tnt===0) return '';
+             return Math.round(tnt/tot*100)+'%';
+           }
+         }
+      },
+      { label: 'HTL', data: [0.63, 30.4, 60.19, 108.3, 67.7], backgroundColor: 'rgba(22,163,74,0.35)',
+         datalabels: { anchor:'center', align:'center', color:'#16a34a', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [0.02, 3.69, 11.69, 27.31, 23.27][ctx.dataIndex];
+             const htl = [0.63, 30.4, 60.19, 108.3, 67.7][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || htl===0) return '';
+             return Math.round(htl/tot*100)+'%';
+           }
+         }
+      }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels: { font:{size:10}, boxWidth:8 } },
+      tooltip: { callbacks: { label: c => `¥${c.parsed.y}M` } },
+      datalabels: {}
+    },
+    scales: {
+      x: { stacked:true, ticks:{font:{size:10}}, grid:{display:false} },
+      y: { stacked:true, ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} }
+    }
+  }
+});
+// Chimelong Group — monthly ANT
+new Chart(document.getElementById('mon_tnt_chimelong'), {
+  type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      { label: '2025 ANT', data: [1.52, 0.79, 1.24, 3.51, 1.11, 1.66, 2.49, 3.35, 1.08, 1.79, 2.09, 6.06], borderColor:'#94a3b8',
+         backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
+         yAxisID:'y', datalabels:{display:false} },
+      { label: '2026 ANT', data: [2.71, 2.38, 4.51, 3.6, 2.93, 3.08, 4.07, null, null, null, null, null], borderColor:'#16a34a',
+         backgroundColor:'rgba(22,163,74,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
+         yAxisID:'y', datalabels:{display:false},
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
+      { label: 'YoY%', data: [78.3, 201.3, 263.7, 2.6, 164.0, 85.5, 63.5, null, null, null, null, null], borderColor:'#f59e0b',
+         backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
+         borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels:{font:{size:10}, boxWidth:8} },
+      tooltip: { callbacks: { label: c => c.dataset.yAxisID==='yoy'
+        ? (c.parsed.y!=null?c.parsed.y+'%':'—')
+        : (c.parsed.y!=null?`¥${c.parsed.y}M`:'—') } },
+      datalabels: {display:false}
+    },
+    scales: {
+      x: { ticks:{font:{size:10}}, grid:{display:false} },
+      y: { ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} },
+      yoy: { position:'right', ticks:{font:{size:9}, color:'#f59e0b', callback: v=>v+'%'},
+              grid:{display:false} }
+    }
+  }
+});
+
+// Chimelong Group — monthly HTL
+new Chart(document.getElementById('mon_htl_chimelong'), {
+  type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      { label: '2025 HTL', data: [4.19, 5.85, 13.14, 12.57, 7.25, 9.82, 7.91, 7.72, 7.9, 7.51, 10.91, 11.78], borderColor:'#94a3b8',
+         backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
+         yAxisID:'y', datalabels:{display:false} },
+      { label: '2026 HTL', data: [7.38, 6.63, 15.99, 8.09, 9.08, 8.98, 11.55, null, null, null, null, null], borderColor:'#16a34a',
+         backgroundColor:'rgba(22,163,74,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
+         yAxisID:'y', datalabels:{display:false},
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
+      { label: 'YoY%', data: [76.1, 13.3, 21.7, -35.6, 25.2, -8.6, 46.0, null, null, null, null, null], borderColor:'#f59e0b',
+         backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
+         borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels:{font:{size:10}, boxWidth:8} },
+      tooltip: { callbacks: { label: c => c.dataset.yAxisID==='yoy'
+        ? (c.parsed.y!=null?c.parsed.y+'%':'—')
+        : (c.parsed.y!=null?`¥${c.parsed.y}M`:'—') } },
+      datalabels: {display:false}
+    },
+    scales: {
+      x: { ticks:{font:{size:10}}, grid:{display:false} },
+      y: { ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} },
+      yoy: { position:'right', ticks:{font:{size:9}, color:'#f59e0b', callback: v=>v+'%'},
+              grid:{display:false} }
+    }
+  }
+});
+
+// Universal Beijing Resort — annual
+new Chart(document.getElementById('ann_ubr'), {
+  type: 'bar',
+  plugins: [ChartDataLabels],
+  data: {
+    labels: ["2022", "2023", "2024", "2025", "2026*"],
+    datasets: [
+      { label: 'ANT', data: [0.61, 2.35, 16.62, 51.59, 76.33], backgroundColor: 'rgba(124,58,237,0.85)',
+         datalabels: { anchor:'center', align:'center', color:'white', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [0.61, 2.35, 16.62, 51.59, 76.33][ctx.dataIndex];
+             const htl = [0.61, 4.11, 6.8, 14.08, 11.8][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || tnt===0) return '';
+             return Math.round(tnt/tot*100)+'%';
+           }
+         }
+      },
+      { label: 'HTL', data: [0.61, 4.11, 6.8, 14.08, 11.8], backgroundColor: 'rgba(124,58,237,0.35)',
+         datalabels: { anchor:'center', align:'center', color:'#7c3aed', font:{size:9,weight:'700'},
+           formatter: (v,ctx) => {
+             const tnt = [0.61, 2.35, 16.62, 51.59, 76.33][ctx.dataIndex];
+             const htl = [0.61, 4.11, 6.8, 14.08, 11.8][ctx.dataIndex];
+             const tot = tnt + htl;
+             if(tot===0 || htl===0) return '';
+             return Math.round(htl/tot*100)+'%';
+           }
+         }
+      }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels: { font:{size:10}, boxWidth:8 } },
+      tooltip: { callbacks: { label: c => `¥${c.parsed.y}M` } },
+      datalabels: {}
+    },
+    scales: {
+      x: { stacked:true, ticks:{font:{size:10}}, grid:{display:false} },
+      y: { stacked:true, ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} }
+    }
+  }
+});
+// Universal Beijing Resort — monthly ANT
+new Chart(document.getElementById('mon_tnt_ubr'), {
+  type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      { label: '2025 ANT', data: [1.49, 1.06, 3.13, 4.45, 3.18, 3.98, 3.55, 3.5, 4.58, 6.72, 5.83, 9.26], borderColor:'#94a3b8',
+         backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
+         yAxisID:'y', datalabels:{display:false} },
+      { label: '2026 ANT', data: [5.08, 5.45, 14.58, 14.16, 12.66, 11.95, 12.45, null, null, null, null, null], borderColor:'#7c3aed',
+         backgroundColor:'rgba(124,58,237,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
+         yAxisID:'y', datalabels:{display:false},
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
+      { label: 'YoY%', data: [240.9, 414.2, 365.8, 218.2, 298.1, 200.3, 250.7, null, null, null, null, null], borderColor:'#f59e0b',
+         backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
+         borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels:{font:{size:10}, boxWidth:8} },
+      tooltip: { callbacks: { label: c => c.dataset.yAxisID==='yoy'
+        ? (c.parsed.y!=null?c.parsed.y+'%':'—')
+        : (c.parsed.y!=null?`¥${c.parsed.y}M`:'—') } },
+      datalabels: {display:false}
+    },
+    scales: {
+      x: { ticks:{font:{size:10}}, grid:{display:false} },
+      y: { ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} },
+      yoy: { position:'right', ticks:{font:{size:9}, color:'#f59e0b', callback: v=>v+'%'},
+              grid:{display:false} }
+    }
+  }
+});
+
+// Universal Beijing Resort — monthly HTL
+new Chart(document.getElementById('mon_htl_ubr'), {
+  type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      { label: '2025 HTL', data: [0.78, 0.86, 1.56, 1.27, 0.86, 1.13, 1.0, 1.21, 1.23, 1.44, 1.31, 1.2], borderColor:'#94a3b8',
+         backgroundColor:'transparent', pointRadius:3, tension:0.3, borderWidth:1.5,
+         yAxisID:'y', datalabels:{display:false} },
+      { label: '2026 HTL', data: [1.12, 1.37, 2.2, 2.05, 1.97, 1.5, 1.59, null, null, null, null, null], borderColor:'#7c3aed',
+         backgroundColor:'rgba(124,58,237,0.08)', fill:true, pointRadius:3, tension:0.3, borderWidth:2,
+         yAxisID:'y', datalabels:{display:false},
+         segment:{ borderDash: ctx => ctx.p1DataIndex >= 6 ? [4,3] : [] } },
+      { label: 'YoY%', data: [43.6, 59.3, 41.0, 61.4, 129.1, 32.7, 59.0, null, null, null, null, null], borderColor:'#f59e0b',
+         backgroundColor:'transparent', pointRadius:2, tension:0.3, borderWidth:1.5,
+         borderDash:[3,2], yAxisID:'yoy', datalabels:{display:false} }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend: { labels:{font:{size:10}, boxWidth:8} },
+      tooltip: { callbacks: { label: c => c.dataset.yAxisID==='yoy'
+        ? (c.parsed.y!=null?c.parsed.y+'%':'—')
+        : (c.parsed.y!=null?`¥${c.parsed.y}M`:'—') } },
+      datalabels: {display:false}
+    },
+    scales: {
+      x: { ticks:{font:{size:10}}, grid:{display:false} },
+      y: { ticks:{font:{size:10}, callback: v=>`¥${v}M`}, grid:{color:'#f1f5f9'} },
+      yoy: { position:'right', ticks:{font:{size:9}, color:'#f59e0b', callback: v=>v+'%'},
+              grid:{display:false} }
+    }
+  }
+});
+</script>
+</body>
+</html>
